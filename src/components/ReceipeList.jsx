@@ -7,9 +7,6 @@ import Button from "react-bootstrap/Button";
 const ReceipeList = ({
   receipes,
   setReceipes,
-  setShowAddModal,
-  show,
-  onHide,
 }) => {
   const [editData, setEditData] = useState({});
   const [showEditModal, setShowEditModal] = useState(false);
