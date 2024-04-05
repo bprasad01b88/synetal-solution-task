@@ -11,45 +11,29 @@ const ReceipeList = ({
   show,
   onHide,
 }) => {
-  const [receipeData, setReceipeData] = useState({
-    name: "",
-    description: "",
-    ingredient: "",
-    instruction: "",
-  });
-
   const [editData, setEditData] = useState({});
   const [showEditModal, setShowEditModal] = useState(false);
 
   const handleClose = () => setShowEditModal(false);
 
   const handleEdit = (data) => {
-    console.log(data, "called");
     setEditData(data);
     setShowEditModal(true);
   };
 
-  const handleUpdate = (data) => {
-    const updateData = data.map((item) =>
-      item.id === data.id ? { ...item, ...data } : item
+  const handleUpdate = () => {
+    const updatedReceipes = receipes.map((receipe) =>
+      receipe.id === editData.id ? editData : receipe
     );
-    setReceipeData(updateData);
+    setReceipes(updatedReceipes);
     setShowEditModal(false);
   };
 
-  //   const handleEdit = (id) => {
-  //     const findReceipe = receipes.find((receipe) => receipe.id === id);
-  //     setReceipeData(findReceipe);
-
-  //     const updatedReceipes = receipes.filter((receipe) => receipe.id !== id);
-  //     setReceipes(updatedReceipes);
-  //   };
-
   const handleDelete = (id) => {
-    console.log("delete", id);
-    const deleteReceipe = receipes.filter((receipe) => receipe.id !== id);
-    setReceipes(deleteReceipe);
+    const updatedReceipes = receipes.filter((receipe) => receipe.id !== id);
+    setReceipes(updatedReceipes);
   };
+
   return (
     <>
       <table className="table">
@@ -64,25 +48,21 @@ const ReceipeList = ({
         </thead>
         <tbody>
           {receipes &&
-            receipes.map((receipe) => {
-              return (
-                <>
-                  <tr key={receipe.id}>
-                    <td>{receipe.name}</td>
-                    <td>{receipe.description}</td>
-                    <td>{receipe.ingredient}</td>
-                    <td>{receipe.instruction}</td>
-                    <td>
-                      <FiEdit2 onClick={() => handleEdit(receipe)} />
-                      <RiDeleteBinLine
-                        style={{ marginLeft: "15px" }}
-                        onClick={() => handleDelete(receipe.id)}
-                      />
-                    </td>
-                  </tr>
-                </>
-              );
-            })}
+            receipes.map((receipe) => (
+              <tr key={receipe.id}>
+                <td>{receipe.name}</td>
+                <td>{receipe.description}</td>
+                <td>{receipe.ingredient}</td>
+                <td>{receipe.instruction}</td>
+                <td>
+                  <FiEdit2 onClick={() => handleEdit(receipe)} />
+                  <RiDeleteBinLine
+                    style={{ marginLeft: "15px" }}
+                    onClick={() => handleDelete(receipe.id)}
+                  />
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
 
@@ -90,27 +70,27 @@ const ReceipeList = ({
         <Modal show={showEditModal} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-              Receipe Management
+              Recipe Management
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                handleUpdate(editData);
+                handleUpdate();
               }}
             >
               <div className="form-group">
-                <label htmlFor="name">Receipe Name</label>
+                <label htmlFor="name">Recipe Name</label>
                 <input
                   type="text"
                   className="form-control"
                   name="name"
-                  value={receipeData?.name}
+                  value={editData.name}
                   onChange={(e) =>
                     setEditData({
                       ...editData,
-                      [e.target.name]: e.target.value,
+                      name: e.target.value,
                     })
                   }
                 />
@@ -121,11 +101,11 @@ const ReceipeList = ({
                   type="text"
                   className="form-control"
                   name="description"
-                  value={receipeData?.description}
+                  value={editData.description}
                   onChange={(e) =>
                     setEditData({
                       ...editData,
-                      [e.target.description]: e.target.value,
+                      description: e.target.value,
                     })
                   }
                 />
@@ -137,11 +117,11 @@ const ReceipeList = ({
                   type="text"
                   className="form-control"
                   name="ingredient"
-                  value={receipeData?.ingredient}
+                  value={editData.ingredient}
                   onChange={(e) =>
                     setEditData({
                       ...editData,
-                      [e.target.ingredient]: e.target.value,
+                      ingredient: e.target.value,
                     })
                   }
                 />
@@ -152,11 +132,11 @@ const ReceipeList = ({
                   type="text"
                   className="form-control"
                   name="instruction"
-                  value={receipeData?.instruction}
+                  value={editData.instruction}
                   onChange={(e) =>
                     setEditData({
                       ...editData,
-                      [e.target.instruction]: e.target.value,
+                      instruction: e.target.value,
                     })
                   }
                 />
@@ -164,7 +144,7 @@ const ReceipeList = ({
 
               <Modal.Footer>
                 <Button type="submit" className="btn btn-danger">
-                  Edit Receipe
+                  Edit Recipe
                 </Button>
               </Modal.Footer>
             </form>
